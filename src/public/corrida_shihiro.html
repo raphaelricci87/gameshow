@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pista de Corrida com CSS</title>
+    <link rel="stylesheet" href="/css/shihiro.css">
+</head>
+<body>
+    <audio id="raceMusic" src="/audio/musica_corrida.mp3"></audio>
+    <div id="track">
+        <div class="lane">
+            <div class="start"></div>
+            <div class="finish"></div>
+            <div class="rat" id="rat1"></div>
+        </div>
+        <div class="lane">
+            <div class="start"></div>
+            <div class="finish"></div>
+            <div class="rat" id="rat2"></div>
+        </div>
+        <div class="lane">
+            <div class="start"></div>
+            <div class="finish"></div>
+            <div class="rat" id="rat3"></div>
+        </div>
+        <div class="label start-label"></div>
+        <div class="label finish-label"></div>
+    </div>
+
+    <div id="winner"></div>
+    <button id="startButton" class="button" onclick="startRace()">Start</button>
+    <button id="againButton" class="button" onclick="resetRace(); startRace();">Again</button>
+
+    <script>
+        const rats = [
+            { id: 'rat1', position: 0 },
+            { id: 'rat2', position: 0 },
+            { id: 'rat3', position: 0 },
+        ];
+        
+        const trackLength = 1200 - 50; 
+        const raceMusic = document.getElementById('raceMusic');
+    
+        function moveRat(rat) {
+            const ratElement = document.getElementById(rat.id);
+            const moveAmount = Math.random() * 10; 
+    
+            rat.position += moveAmount;
+    
+            if (rat.position >= trackLength) {
+                rat.position = trackLength;
+                declareWinner(rat.id);
+            }
+    
+            ratElement.style.left = rat.position + 'px';
+        }
+    
+        function declareWinner(winnerId) {
+            raceMusic.pause(); // Pausa a música quando a corrida termina
+            raceMusic.currentTime = 0; // Reseta a música para o início
+            document.getElementById('againButton').style.display = 'block'; 
+            document.getElementById('startButton').style.display = 'none'; 
+            transformNameRat(winnerId); // Exibe o vencedor
+        }
+    
+        function transformNameRat(winnerId) {
+            if(winnerId === 'rat1') {
+                document.getElementById('winner').innerText = 'Vermelho' + " wins the race!";
+            } else if(winnerId === 'rat2') {
+                document.getElementById('winner').innerText = 'Verde'+ " wins the race!";
+            } else {
+                document.getElementById('winner').innerText = 'Azul'+ " wins the race!";
+            }
+        }
+    
+        function resetRace() {
+            document.getElementById('winner').innerText = '';
+            document.getElementById('againButton').style.display = 'none'; // Oculta o botão 'Again'
+            document.getElementById('startButton').style.display = 'block'; // Mostra o botão 'Start'
+            rats.forEach(rat => {
+                rat.position = 0;
+                document.getElementById(rat.id).style.left = '0px';
+            });
+        }
+    
+        function startRace() {
+            document.getElementById('startButton').style.display = 'none'; // Oculta o botão 'Start' ao iniciar a corrida
+            raceMusic.play(); // Toca a música quando a corrida começa
+            const raceInterval = setInterval(() => {
+                rats.forEach(moveRat);
+    
+                if (rats.some(rat => rat.position >= trackLength)) {
+                    clearInterval(raceInterval);
+                }
+            }, 100);
+        }
+    </script>    
+</body>
+</html>

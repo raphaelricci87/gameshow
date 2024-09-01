@@ -1,0 +1,104 @@
+:root {
+    --primary-color: #ffffff; /* Branco */
+    --secondary-color: #cccccc; /* Cinza claro */
+    --background-color: #1a1a1a; /* Preto suave */
+    --text-color: #f0f0f0; /* Cinza claro para texto */
+    --border-color: #333333; /* Cinza escuro */
+    --correct-color: #00cc00; /* Verde para feedback correto */
+    --incorrect-color: #ff3333; /* Vermelho para feedback incorreto */
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+h1 {
+    font-size: 2em;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.frame-container {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+    width: 100%;
+    max-width: 800px;
+}
+
+.frame {
+    width: 150px;
+    height: 100px;
+    border: 2px solid var(--border-color);
+    margin: 10px;
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.frame:hover {
+    transform: scale(1.05);
+    border-color: var(--secondary-color);
+}
+
+.dropzone {
+    width: 150px;
+    height: 100px;
+    border: 2px dashed var(--border-color);
+    margin: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s ease;
+}
+
+.dropzone:hover {
+    border-color: var(--secondary-color);
+}
+
+button {
+    background-color: var(--secondary-color);
+    color: var(--background-color);
+    border: none;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.2s ease;
+}
+
+button:hover {
+    background-color: var(--primary-color);
+}
+
+#result {
+    margin-top: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+#result.correct {
+    color: var(--correct-color);
+}
+
+#result.incorrect {
+    color: var(--incorrect-color);
+}
+.correct {
+    border: 3px solid green;
+}
+
+.incorrect {
+    border: 3px solid red;
+}
+

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Reveal Game</title>
+  <link rel="stylesheet" href="/css/image-reveal.css">
+</head>
+<body>
+  <h1>Traço escondido</h1>
+  <div id="image-container"></div>
+  <button id="next-image" style="display: none;">Próxima imagem</button>
+  <button id="reveal-image">Mostrar imagem</button>
+
+  <script>
+    let imageContainer = document.getElementById('image-container');
+    let nextImageButton = document.getElementById('next-image');
+    let revealImageButton = document.getElementById('reveal-image');
+
+    function loadImage() {
+      fetch('/api/image')
+        .then(response => response.json())
+        .then(data => {
+          const img = new Image();
+          img.src = data.image_path;
+          img.onload = () => {
+            createImageGrid(img);
+            revealImageButton.style.display = 'block'; // Mostrar o botão "Reveal Image"
+          };
+        });
+    }
+
+    function createImageGrid(img) {
+      imageContainer.innerHTML = '';
+
+      const maxParts = 16;
+      const containerMaxWidth = 600;
+      const containerMaxHeight = 600;
+
+      const aspectRatio = img.width / img.height;
+      let rows = Math.round(Math.sqrt(maxParts / aspectRatio));
+      let cols = Math.round(maxParts / rows);
+
+      if (rows * cols < maxParts) {
+        cols += 1;
+      }
+
+      let imgWidth = img.width;
+      let imgHeight = img.height;
+
+      // Redimensione a imagem para caber dentro do container
+      if (imgWidth > containerMaxWidth || imgHeight > containerMaxHeight) {
+        if (imgWidth / containerMaxWidth > imgHeight / containerMaxHeight) {
+          imgHeight = (imgHeight * containerMaxWidth) / imgWidth;
+          imgWidth = containerMaxWidth;
+        } else {
+          imgWidth = (imgWidth * containerMaxHeight) / imgHeight;
+          imgHeight = containerMaxHeight;
+        }
+      }
+
+      const pieceWidth = imgWidth / cols;
+      const pieceHeight = imgHeight / rows;
+
+      imageContainer.style.gridTemplateColumns = `repeat(${cols}, ${pieceWidth}px)`;
+      imageContainer.style.width = `${imgWidth}px`;
+      imageContainer.style.height = `${imgHeight}px`;
+
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          const div = document.createElement('div');
+          div.classList.add('image-part');
+          div.style.width = `${pieceWidth}px`;
+          div.style.height = `${pieceHeight}px`;
+
+          const cover = document.createElement('div');
+          cover.classList.add('cover');
+
+          cover.addEventListener('click', () => revealPart(cover));
+
+          div.style.backgroundImage = `url(${img.src})`;
+          div.style.backgroundPosition = `-${col * pieceWidth}px -${row * pieceHeight}px`;
+          div.style.backgroundSize = `${imgWidth}px ${imgHeight}px`;
+
+          div.appendChild(cover);
+          imageContainer.appendChild(div);
+        }
+      }
+    }
+
+    function revealPart(cover) {
+      cover.classList.add('revealed');
+      const allParts = document.querySelectorAll('.cover:not(.revealed)');
+      if (allParts.length === 0) {
+        nextImageButton.style.display = 'block';
+        revealImageButton.style.display = 'none'; // Esconder o botão "Reveal Image" quando todos os blocos são revelados
+      }
+    }
+
+    function revealAllParts() {
+      const allCovers = document.querySelectorAll('.cover');
+      allCovers.forEach(cover => {
+        cover.classList.add('revealed');
+      });
+      nextImageButton.style.display = 'block';
+      revealImageButton.style.display = 'none'; // Esconder o botão "Reveal Image"
+    }
+
+    nextImageButton.addEventListener('click', () => {
+      window.location.href = '/api/image-reveal';
+    });
+
+    revealImageButton.addEventListener('click', revealAllParts);
+
+    window.onload = loadImage;
+  </script>
+</body>
+</html>

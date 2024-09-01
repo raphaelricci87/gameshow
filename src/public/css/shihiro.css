@@ -1,0 +1,111 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+    flex-direction: column;
+}
+#track {
+    position: relative;
+    width: 1200px;
+    height: 200px;
+    background-color: #333; /* Cor do asfalto */
+    border: 5px solid #000;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+.lane {
+    height: 33.33%;
+    border-top: 2px solid #fff; /* Linhas de separação entre as pistas */
+    border-bottom: 2px solid #fff;
+    position: relative;
+}
+.lane:first-child {
+    border-top: none;
+}
+.lane:last-child {
+    border-bottom: none;
+}
+.rat {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-image: url('../images/rat.png');
+    background-size: cover;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+/* Aplicando cores diferentes usando uma sobreposição de cor */
+#rat1 {
+    background-color: rgba(255, 0, 0, 0.5); /* Rato 1 vermelho */
+    background-blend-mode: multiply;
+}
+#rat2 {
+    background-color: rgba(0, 255, 0, 0.5); /* Rato 2 verde */
+    background-blend-mode: multiply;
+}
+#rat3 {
+    background-color: rgba(0, 0, 255, 0.5); /* Rato 3 azul */
+    background-blend-mode: multiply;
+}
+.start, .finish {
+    position: absolute;
+    width: 10px;
+    height: 100%;
+    top: 0;
+    z-index: 1;
+}
+.start {
+    left: 0;
+}
+.finish {
+    right: 0;
+    background-image: linear-gradient(45deg, #fff 25%, #000 25%, #000 50%, #fff 50%, #fff 75%, #000 75%, #000); /* Bandeira de chegada */
+    background-size: 20px 20px;
+}
+.label {
+    position: absolute;
+    top: -30px;
+    width: 100px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+    color: #fff;
+}
+.label.start-label {
+    left: -50px;
+}
+.label.finish-label {
+    right: -55px;
+}
+#winner {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;            
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+.button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin: 5px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+.button:hover {
+    background-color: #0056b3;
+}
+#againButton {
+    display: none; /* Oculto até o final da corrida */
+}
