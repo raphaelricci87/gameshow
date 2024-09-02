@@ -111,21 +111,17 @@ router.post('/fortune-coyote/spin', async (req, res) => {
     let reel2 = symbols[Math.floor(Math.random() * symbols.length)];
     let reel3 = symbols[Math.floor(Math.random() * symbols.length)];
 
-    // Initialize the win flag and score
     let win = false;
     let score = 0;
 
-    // Determine win or loss with 20% chance of guaranteed win
-    if (Math.random() < 0.9) {
+    if (Math.random() < 0.2) {
         win = true;
-        // Force a win by setting all reels to the same symbol
         reel2 = reel1;
         reel3 = reel1;
     } else {
         win = (reel1 === reel2) && (reel2 === reel3);
     }
 
-    // Calculate the score based on the symbols
     if (win) {
       if (reel1 === '🐺') {
         score = 1000;
