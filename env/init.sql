@@ -91,8 +91,11 @@ INSERT INTO questions (question, option_a, option_b, option_c, option_d, correct
 ('Qual estúdio produziu "Ergo Proxy", um anime conhecido por sua estética cyberpunk e filosofia profunda?', 'Manglobe', 'Madhouse', 'Production I.G', 'Trigger', 'A'),
 ('Quem dirigiu "The Tatami Galaxy", um anime que utiliza narrativas rápidas e complexas?', 'Makoto Shinkai', 'Masaaki Yuasa', 'Kunihiko Ikuhara', 'Shinichiro Watanabe', 'B'),
 ('Qual estúdio é responsável pela produção do anime "Ping Pong The Animation"?', 'Ufotable', 'Bones', 'TMS Entertainment', 'Tatsunoko Production', 'D'),
-('Quem foi o diretor do anime "Rebuild of Evangelion", a série de filmes que revisita e reinterpreta "Neon Genesis Evangelion"?', 'Yoshiyuki Tomino', 'Kazuya Tsurumaki', 'Hideaki Anno', 'Hiroyuki Imaishi', 'C');
-
+('Quem foi o diretor do anime "Rebuild of Evangelion", a série de filmes que revisita e reinterpreta "Neon Genesis Evangelion"?', 'Yoshiyuki Tomino', 'Kazuya Tsurumaki', 'Hideaki Anno', 'Hiroyuki Imaishi', 'C'),
+('Eu concordo um pouco e também não concordo um pouco', 'Fred 1', 'Fred 2', 'Marco Abreu', 'Jesus Cristo', 'A'),
+('Pra mim vilão pra ser um bom vilão ele precisa de uma boa motivação pra ser vilão', 'Benito Mussolini', 'Satanás', 'Jung', 'Fred 1', 'D'),
+('O cara tentou entender o que o autor escrever do que o autor pensa', 'Robert McKee', 'William Shakespeare','Léo Gamer','William Alpha', 'C'),
+('Normalmente a melhor motivação é aquela que vem de um trauma, né?', 'Fred', 'Fred 1', 'Fred 2', 'Freud', 'C');
 
 INSERT INTO frame_groups (group_name, frame_order, image_path) VALUES
 ('Episode 1', 1, '/images/SAO/1.png'),

@@ -1,0 +1,112 @@
+<!-- public/fortune-coyote.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Fortune Coyote</title>
+    <link rel="stylesheet" href="/css/fortune-coyote.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Fortune Coyote</h1>
+        <div class="scoreboard">
+            <span>Pontuação: </span>
+            <input type="number" id="score" value="0" min="0">
+        </div>
+        <div class="reels">
+            <div class="reel" id="reel1">🍒</div>
+            <div class="reel" id="reel2">🍒</div>
+            <div class="reel" id="reel3">🍒</div>
+        </div>
+        <button id="spin-button" disabled>Girar</button>
+        <div id="result"></div>
+
+        <!-- Elemento de áudio -->
+        <audio id="spin-music" src="/audio/spin.mp3"></audio>
+    </div>
+
+    <script>
+// public/fortune-coyote.js
+const spinButton = document.getElementById('spin-button');
+const reels = [document.getElementById('reel1'), document.getElementById('reel2'), document.getElementById('reel3')];
+const scoreElement = document.getElementById('score');
+const resultElement = document.getElementById('result');
+const spinMusic = document.getElementById('spin-music');
+
+const symbols = ['🍒', '🍋', '🍊', '🍉', '⭐', '🐺', '🔔'];
+
+function flashReels(reels, duration) {
+    return new Promise((resolve) => {
+        let intervalId = setInterval(() => {
+            reels.forEach(reel => {
+                const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+                reel.textContent = randomSymbol;
+            });
+        }, 200); // Altera a cada 200ms para criar um efeito de "piscar" mais lento
+
+        setTimeout(() => {
+            clearInterval(intervalId);
+            resolve();
+        }, duration);
+    });
+}
+
+// Habilita o botão "Girar" somente quando o valor da pontuação for maior que zero
+scoreElement.addEventListener('input', () => {
+    if (parseInt(scoreElement.value) > 0) {
+        spinButton.disabled = false;
+    } else {
+        spinButton.disabled = true;
+    }
+});
+
+spinButton.addEventListener('click', async () => {
+    try {
+        let score = parseInt(scoreElement.value);
+
+        // Toca a música
+        spinMusic.play();
+
+        // Inicia o efeito de piscar por 11 segundos
+        await flashReels(reels, 10000);
+
+        // Para a música quando o efeito de piscar termina
+        spinMusic.pause();
+        spinMusic.currentTime = 0; // Reseta a música para o início
+
+        // Faz a requisição para obter o resultado final
+        const response = await fetch('/api/fortune-coyote/spin', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await response.json();
+
+        // Exibe o resultado final após o efeito de piscar
+        reels[0].textContent = data.reel1;
+        reels[1].textContent = data.reel2;
+        reels[2].textContent = data.reel3;
+
+        if (data.win) {
+            score += data.score;
+            resultElement.textContent = `Você ganhou ${data.score} pontos! 🎉`;
+        } else {
+            score -= 50;
+            resultElement.textContent = `Você perdeu 50 pontos! 😢`;
+        }
+
+        scoreElement.value = score;
+
+        if (score <= 0) {
+            spinButton.disabled = true;
+            resultElement.textContent += ' Fim de jogo!';
+        }
+    } catch (err) {
+        console.error(err);
+        resultElement.textContent = 'Ocorreu um erro. Tente novamente.';
+    }
+});
+    </script>
+</body>
+</html>

@@ -95,5 +95,64 @@ router.post('/check-frame-order', async (req, res) => {
   }
 });
 
+router.get('/fortune-coyote', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'fortune-coyote.html'));
+});
+
+
+// API route for spinning the reels
+// API route for spinning the reels
+router.post('/fortune-coyote/spin', async (req, res) => {
+  try {
+    const symbols = ['🍒', '🍋', '🍊', '🍉', '⭐', '🐺', '🔔'];
+
+    // Simulate the reel spins
+    let reel1 = symbols[Math.floor(Math.random() * symbols.length)];
+    let reel2 = symbols[Math.floor(Math.random() * symbols.length)];
+    let reel3 = symbols[Math.floor(Math.random() * symbols.length)];
+
+    // Initialize the win flag and score
+    let win = false;
+    let score = 0;
+
+    // Determine win or loss with 20% chance of guaranteed win
+    if (Math.random() < 0.9) {
+        win = true;
+        // Force a win by setting all reels to the same symbol
+        reel2 = reel1;
+        reel3 = reel1;
+    } else {
+        win = (reel1 === reel2) && (reel2 === reel3);
+    }
+
+    // Calculate the score based on the symbols
+    if (win) {
+      if (reel1 === '🐺') {
+        score = 1000;
+      } else if (reel1 === '⭐') {
+        score = 500;
+      } else if (reel1 === '🍉') {
+        score = 300;
+      } else if (reel1 === '🍊') {
+        score = 200;
+      } else if (reel1 === '🍋') {
+        score = 100;
+      } else if (reel1 === '🍒') {
+        score = 50;
+      } else if (reel1 === '🔔') {
+        score = 75;
+      }
+    }
+
+    // Return the response as JSON
+    res.json({ reel1, reel2, reel3, win, score });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+
+
 
 module.exports = router;
