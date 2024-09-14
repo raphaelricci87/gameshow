@@ -1,106 +1,78 @@
-:root {
-    --primary-color: #ffffff; /* Branco */
-    --secondary-color: #cccccc; /* Cinza claro */
-    --background-color: #1a1a1a; /* Preto suave */
-    --text-color: #f0f0f0; /* Cinza claro para texto */
-    --border-color: #333333; /* Cinza escuro */
-    --button-hover-color: #444444; /* Cinza mais claro no hover */
-    --correct-color: #00cc00; /* Verde para resposta correta */
-    --incorrect-color: #ff3333; /* Vermelho para resposta incorreta */
-}
-
+/* index.css */
 body {
-    background-color: var(--background-color);
-    color: var(--text-color);
     font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
+    background-color: #000000; /* Fundo preto */
+    color: white;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-}
-
-#quiz-container {
-    background-color: var(--border-color);
+    height: 100vh;
+    margin: 0;
+  }
+  
+  #quiz-container {
+    background-color: #1c1c1c; /* Fundo cinza escuro */
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3); /* Sombra branca suave */
     text-align: center;
     width: 100%;
-    max-width: 500px;
-}
-
-h1 {
-    font-size: 1.5em;
-    color: var(--primary-color);
+    max-width: 600px;
+  }
+  
+  h1 {
+    font-size: 2em;
     margin-bottom: 20px;
-}
-
-button {
-    background-color: var(--secondary-color);
-    color: var(--background-color);
-    border: none;
+    color: #f5f5f5; /* Branco suave para o título */
+  }
+  
+  button {
+    font-size: 1.5em;
+    color: white;
+    background-color: #333333; /* Fundo cinza escuro para os botões */
+    border: 2px solid #ffffff; /* Borda branca padrão */
     padding: 15px;
-    margin: 10px 0;
+    margin: 10px;
     width: 100%;
-    font-size: 1em;
+    max-width: 400px;
+    border-radius: 10px;
     cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.2s ease, transform 0.2s ease;
-}
-
-button:hover {
-    background-color: var(--button-hover-color);
-    transform: scale(1.05);
-}
-
-button:active {
-    background-color: var(--button-hover-color);
-    transform: scale(1.02);
-}
-
-button.correct {
-    background-color: var(--correct-color);
-    color: var(--background-color);
-}
-
-button.incorrect {
-    background-color: var(--incorrect-color);
-    color: var(--background-color);
-}
-
-@media (max-width: 600px) {
-    button {
-        font-size: 0.9em;
-        padding: 12px;
-    }
-}
-
-#result {
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3); /* Sombra branca leve */
+    transition: all 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #4d4d4d; /* Cinza mais claro ao passar o mouse */
+    box-shadow: 0 5px 20px rgba(255, 255, 255, 0.5);
+  }
+  
+  button:active {
+    transform: scale(0.98); /* Efeito de clique */
+  }
+  
+  #result {
+    font-size: 1.8em;
     margin-top: 20px;
+    color: #e6e6e6; /* Cinza claro para o resultado */
+  }
+  
+  #retryButton {
+    background-color: #ff0000; /* Vermelho para o botão de tentar novamente */
+    border: 2px solid #ffffff;
+  }
+  
+  #retryButton:hover {
+    background-color: #ff5555;
+  }
+  
+  #nextQuestionButton {
+    background-color: #008CBA; /* Azul para o botão de próxima pergunta */
+    border: 2px solid #ffffff;
+    padding: 10px;
     font-size: 1.2em;
-    font-weight: bold;
-    color: var(--incorrect-color);
-}
-
-#retryButton {
-    background-color: var(--secondary-color);
-    color: var(--background-color);
-    border: none;
-    padding: 10px 20px;
-    font-size: 1em;
-    cursor: pointer;
-    margin-top: 20px;
-    display: inline-block;
-    border-radius: 5px;
-    transition: background-color 0.2s ease;
-}
-
-#retryButton:hover {
-    background-color: var(--button-hover-color);
-}
-
-#result.victory {
-    color: var(--correct-color);
-}
+  }
+  
+  #nextQuestionButton:hover {
+    background-color: #00aaff;
+  }
+  

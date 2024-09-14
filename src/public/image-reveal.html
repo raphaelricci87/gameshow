@@ -66,8 +66,12 @@
       imageContainer.style.width = `${imgWidth}px`;
       imageContainer.style.height = `${imgHeight}px`;
 
+      let indice = 0;
+
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
+          indice ++;
+          
           const div = document.createElement('div');
           div.classList.add('image-part');
           div.style.width = `${pieceWidth}px`;
@@ -75,7 +79,8 @@
 
           const cover = document.createElement('div');
           cover.classList.add('cover');
-
+          cover.innerText = indice;
+ 
           cover.addEventListener('click', () => revealPart(cover));
 
           div.style.backgroundImage = `url(${img.src})`;

@@ -59,7 +59,16 @@ h1 {
     z-index: 1;
     cursor: pointer;
     transition: background-color 0.3s ease;
+
+    /* Adicione estas linhas para centralizar e aumentar o número */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px; /* Aumente conforme necessário */
+    font-weight: bold; /* Negrito para destacar o número */
+    color: white; /* Cor do número */
 }
+
 
 .cover:hover {
     background-color: var(--cover-hover-color);
@@ -90,3 +99,4 @@ button:hover {
 button:active {
     background-color: var(--button-active-color);
 }
+  

@@ -14,8 +14,13 @@
     <button id="optionC" onclick="submitAnswer('C')"></button>
     <button id="optionD" onclick="submitAnswer('D')"></button>
     <div id="result" style="display: none;"></div>
+    <button id="nextQuestionButton" onclick="loadQuestion()" style="display: none;">Next Question</button>
     <button id="retryButton" onclick="retryGame()" style="display: none;">Try Again</button>
   </div>
+
+  <audio id="correctSound" src="/audio/certo.mp3"></audio>
+  <audio id="wrongSound" src="/audio/errado.mp3"></audio>
+
   <script>
     let currentQuestionId;
     let correctAnswers = 0;
@@ -38,9 +43,11 @@
           document.getElementById('optionC').innerText = data.option_c;
           document.getElementById('optionD').innerText = data.option_d;
           document.getElementById('result').style.display = 'none';
+          document.getElementById('nextQuestionButton').style.display = 'none';
           document.getElementById('retryButton').style.display = 'none';
           document.querySelectorAll('button[id^="option"]').forEach(button => {
             button.style.display = 'inline-block';
+            button.style.border = '2px solid #ffffff'; // Borda padrão branca
           });
         });
     }
@@ -55,26 +62,32 @@
       })
       .then(response => response.json())
       .then(data => {
+        const selectedButton = document.getElementById(`option${answer}`);
+        const successSound = document.getElementById('correctSound');
+        const errorSound = document.getElementById('wrongSound');
+        
         if (data.correct) {
-          answeredQuestions.add(currentQuestionId); // Marca a pergunta como respondida
-          correctAnswers++;
+          successSound.play();
+          setTimeout(() => { 
+          selectedButton.style.border = '4px solid green'; // Aplica a cor verde após 2 segundos
+          // Borda verde em caso de sucesso
+          answeredQuestions.add(currentQuestionId);
+          correctAnswers++;     
+        
           if (correctAnswers >= 5) {
             showVictory();
           } else {
-            loadQuestion();
+            document.getElementById('nextQuestionButton').style.display = 'inline-block'; // Exibe o botão de próxima pergunta
           }
+        }, 2000);
         } else {
-          showGameOver();
+          errorSound.play();
+          setTimeout(() => {
+          selectedButton.style.border = '4px solid red'; // Borda vermelha em caso de erro
+          document.getElementById('retryButton').style.display = 'inline-block';
+        }, 2000);
         }
-      });
-    }
-
-    function showGameOver() {
-      document.getElementById('result').innerText = 'Game Over! Wrong Answer.';
-      document.getElementById('result').style.display = 'block';
-      document.getElementById('retryButton').style.display = 'inline-block';
-      document.querySelectorAll('button[id^="option"]').forEach(button => {
-        button.style.display = 'none';
+      
       });
     }
 
