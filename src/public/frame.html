@@ -1,101 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Anime Frame Ordering Game</title>
-    <link rel="stylesheet" href="/css/frame.css">
+    <link rel="stylesheet" href="/css/frame.css" />
     <style>
-        body {
-            background: linear-gradient(135deg, #2c3e50, #4b79a1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            font-family: 'Arial', sans-serif;
-            color: #fff;
+      body {
+        background: linear-gradient(135deg, #2c3e50, #4b79a1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+        font-family: "Arial", sans-serif;
+        color: #fff;
+      }
+
+      h1 {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        font-size: 3em;
+        margin-bottom: 20px;
+      }
+
+      .frame-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .frame,
+      .dropzone {
+        width: 200px; /* Dobro do tamanho original */
+        height: 200px; /* Dobro do tamanho original */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease;
+        border-radius: 10px;
+      }
+
+      .frame {
+        cursor: pointer;
+      }
+
+      .dropzone {
+        border: 2px dashed #ddd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 200px; /* Define uma largura mínima */
+        min-height: 200px; /* Define uma altura mínima */
         }
 
-        h1 {
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            font-size: 3em;
-            margin-bottom: 20px;
-        }
+      .frame:hover {
+        transform: scale(1.1);
+      }
 
-        .frame-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
+      /* Animações para feedback visual */
+      .correct {
+        animation: correct-pulse 1s ease forwards;
+      }
 
-        .frame, .dropzone {
-            width: 200px;  /* Dobro do tamanho original */
-            height: 200px; /* Dobro do tamanho original */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease;
-            border-radius: 10px;
-        }
+      .incorrect {
+        animation: incorrect-shake 0.5s ease;
+      }
 
-        .frame {
-            cursor: pointer;
+      @keyframes correct-pulse {
+        0% {
+          transform: scale(1);
+          border-color: green;
         }
+        50% {
+          transform: scale(1.1);
+          border-color: lightgreen;
+        }
+        100% {
+          transform: scale(1);
+          border-color: green;
+        }
+      }
 
-        .dropzone {
-            border: 2px dashed #ddd;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+      @keyframes incorrect-shake {
+        0%,
+        100% {
+          transform: translateX(0);
         }
-
-        .frame:hover {
-            transform: scale(1.1);
+        25% {
+          transform: translateX(-5px);
         }
-
-        /* Animações para feedback visual */
-        .correct {
-            animation: correct-pulse 1s ease forwards;
+        50% {
+          transform: translateX(5px);
         }
-
-        .incorrect {
-            animation: incorrect-shake 0.5s ease;
+        75% {
+          transform: translateX(-5px);
         }
-
-        @keyframes correct-pulse {
-            0% {
-                transform: scale(1);
-                border-color: green;
-            }
-            50% {
-                transform: scale(1.1);
-                border-color: lightgreen;
-            }
-            100% {
-                transform: scale(1);
-                border-color: green;
-            }
-        }
-
-        @keyframes incorrect-shake {
-            0%, 100% {
-                transform: translateX(0);
-            }
-            25% {
-                transform: translateX(-5px);
-            }
-            50% {
-                transform: translateX(5px);
-            }
-            75% {
-                transform: translateX(-5px);
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Coloque as imagens na ordem</h1>
     <div class="frame-container" id="frames"></div>
     <div class="frame-container" id="dropzones"></div>
@@ -106,89 +110,90 @@
     <audio id="errorSound" src="/audio/errado.mp3"></audio>
 
     <script>
-        let frames = [];
-        let correctSequence = [];
+      let frames = [];
+      let correctSequence = [];
 
-        async function loadFrames() {
-            const response = await fetch('/api/frame-group'); 
-            const data = await response.json();
-            frames = data; 
-            shuffle(frames);
-            
-            correctSequence = data.map(frame => frame.frame_order); // Armazena a sequência correta (frame_order)
+      async function loadFrames() {
+        const response = await fetch("/api/frame-group");
+        const data = await response.json();
+        frames = data;
+        shuffle(frames);
 
-            const frameContainer = document.getElementById('frames');
-            frames.forEach((frame, index) => {
-                const img = document.createElement('img');
-                img.src = frame.image_path;
-                img.className = 'frame';
-                img.draggable = true;
-                img.dataset.order = frame.frame_order; // Armazena o frame_order como um atributo de dados
-                img.id = `frame-${index}`;
-                img.addEventListener('dragstart', dragStart);
-                frameContainer.appendChild(img);
-            });
+        correctSequence = data.map((frame) => frame.frame_order); // Armazena a sequência correta (frame_order)
 
-            const dropzoneContainer = document.getElementById('dropzones');
-            for (let i = 0; i < frames.length; i++) {
-                const dropzone = document.createElement('div');
-                dropzone.className = 'dropzone';
-                dropzone.addEventListener('dragover', dragOver);
-                dropzone.addEventListener('drop', drop);
-                dropzone.dataset.index = i; // Adiciona o índice do dropzone
-                dropzoneContainer.appendChild(dropzone);
-            }
+        const frameContainer = document.getElementById("frames");
+        frames.forEach((frame, index) => {
+          const img = document.createElement("img");
+          img.src = frame.image_path;
+          img.className = "frame";
+          img.draggable = true;
+          img.dataset.order = frame.frame_order; // Armazena o frame_order como um atributo de dados
+          img.id = `frame-${index}`;
+          img.addEventListener("dragstart", dragStart);
+          frameContainer.appendChild(img);
+        });
+
+        const dropzoneContainer = document.getElementById("dropzones");
+        for (let i = 0; i < frames.length; i++) {
+          const dropzone = document.createElement("div");
+          dropzone.className = "dropzone";
+          dropzone.addEventListener("dragover", dragOver);
+          dropzone.addEventListener("drop", drop);
+          dropzone.dataset.index = i; // Adiciona o índice do dropzone
+          dropzoneContainer.appendChild(dropzone);
+        }
+      }
+
+      function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+      }
+
+      let dragged;
+
+      function dragStart(event) {
+        dragged = event.target;
+      }
+
+      function dragOver(event) {
+        event.preventDefault();
+      }
+
+      function drop(event) {
+        event.preventDefault();
+        if (event.target.className.includes("dropzone")) {
+          event.target.appendChild(dragged);
+        } else if (event.target.className.includes("frame")) {
+          const parent = event.target.parentNode;
+          parent.insertBefore(dragged, event.target);
         }
 
-        function shuffle(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
+        // Verifica se o frame está na posição correta usando o frame_order
+        const currentIndex = parseInt(event.target.dataset.index) + 1; // Incrementa o índice para corresponder ao frame_order (1-based)
+        const frameOrder = parseInt(dragged.dataset.order); // Pega o frame_order da imagem
+
+        const successSound = document.getElementById("successSound");
+        const errorSound = document.getElementById("errorSound");
+
+        if (frameOrder === currentIndex) {
+          // Compara os valores inteiros
+          successSound.play(); // Toca o som de sucesso
+          setTimeout(() => {
+            dragged.classList.add("correct");
+            dragged.style.border = "3px solid green"; // Aplica a cor verde após 2 segundos
+          }, 2000);
+        } else {
+          errorSound.play(); // Toca o som de erro
+          setTimeout(() => {
+            dragged.classList.add("incorrect");
+            dragged.style.border = "3px solid red"; // Aplica a cor vermelha após 2 segundos
+          }, 2000);
         }
+      }
 
-        let dragged;
-
-        function dragStart(event) {
-            dragged = event.target;
-        }
-
-        function dragOver(event) {
-            event.preventDefault();
-        }
-
-        function drop(event) {
-            event.preventDefault();
-            if (event.target.className.includes('dropzone')) {
-                event.target.appendChild(dragged);
-            } else if (event.target.className.includes('frame')) {
-                const parent = event.target.parentNode;
-                parent.insertBefore(dragged, event.target);
-            }
-
-            // Verifica se o frame está na posição correta usando o frame_order
-            const currentIndex = parseInt(event.target.dataset.index) + 1; // Incrementa o índice para corresponder ao frame_order (1-based)
-            const frameOrder = parseInt(dragged.dataset.order); // Pega o frame_order da imagem
-
-            const successSound = document.getElementById('successSound');
-            const errorSound = document.getElementById('errorSound');
-
-            if (frameOrder === currentIndex) { // Compara os valores inteiros
-                successSound.play(); // Toca o som de sucesso
-                setTimeout(() => {
-                    dragged.classList.add('correct');
-                    dragged.style.border = '3px solid green'; // Aplica a cor verde após 2 segundos
-                }, 2000);
-            } else {
-                errorSound.play(); // Toca o som de erro
-                setTimeout(() => {
-                    dragged.classList.add('incorrect');
-                    dragged.style.border = '3px solid red'; // Aplica a cor vermelha após 2 segundos
-                }, 2000);
-            }
-        }
-
-        window.onload = loadFrames;
+      window.onload = loadFrames;
     </script>
-</body>
+  </body>
 </html>
